@@ -16,7 +16,7 @@ ghci> solve [6,7,8,9] operations 44
 ```
 This program finds two ways to do this. To challenge yourself or your friends, you can search for difficult target numbers.
 ```hs
-ghci> [x | x <- [1..100], (length $ solve [6,7,8,9] operations x) == 2]
+ghci> take 3 $ findDifficultProblems [6,7,8,9] operations 2
 [7.0,44.0,51.0]
 ```
 By default, the program supplies the four basic arithmetic operations `[+,-,*,/]` as a list called `operations`, but it is possible to add more operations by defining your own. For example, you can define exponentiation:
