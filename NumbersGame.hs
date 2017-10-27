@@ -1,7 +1,8 @@
 import Data.List
 
 data Operation a = Operation {  operation :: (a -> a -> a),
-                                toString  :: String  }
+                                toString  :: String,
+                                commutative :: Bool }
 
 {-
             
@@ -28,7 +29,10 @@ instance (Show a) => Show (Expression a) where
 
 instance (Eq a, Num a) => Eq (Expression a) where
   (==) (Number n) (Number m) = n == m
-  (==) (Expression op1 e1 e2) (Expression op2 e3 e4) = and [ op1 == op2, e1 == e3, e2 == e4 ]
+  (==) (Expression op1 e1 e2) (Expression op2 e3 e4)
+    | op1 /= op2 = False
+    | commutative op1 = (and [ e1 == e3, e2 == e4 ]) || (and [ e1 == e4, e2 == e3 ])
+    | otherwise = and [ e1 == e3, e2 == e4 ]
   (==) _ _ = False
 
 instance (Eq a, Num a, Ord a) => Ord (Expression a) where
@@ -42,10 +46,10 @@ expressionFromString str
   | otherwise = Number (read str)
 
 operations :: (Fractional a, Num a, Read a, Show a) => [Operation a]
-operations = [  Operation { operation = (+), toString = "+" },
-                Operation { operation = (-), toString = "-" },
-                Operation { operation = (*), toString = "*" },
-                Operation { operation = (/), toString = "/" }]
+operations = [  Operation { operation = (+), toString = "+", commutative = True },
+                Operation { operation = (-), toString = "-", commutative = False },
+                Operation { operation = (*), toString = "*", commutative = True },
+                Operation { operation = (/), toString = "/", commutative = False }]
 
 standardOrder :: Expression a -> Expression a
 standardOrder e = e
@@ -69,4 +73,4 @@ solve :: (Eq a, Num a) => [a] -> [Operation a] -> a -> [Expression a]
 solve ns ops target = filter (\e -> (evaluate e) == target) (allPossibleExpressions ns ops)
 
 findDifficultProblems :: (Enum a, Eq a, Num a) => [a] -> [Operation a] -> Int -> [a]
-findDifficultProblems ns ops difficulty = [ x | x <- [0..], (length $ solve ns ops x) == difficulty ]
+findDifficultProblems ns ops difficulty = [ x | x <- [0..], (length . nub $ solve ns ops x) == difficulty ]
