@@ -39,4 +39,4 @@ ghci> take 5 $ findDifficultProblems [6,7,8,9] operations 1
 ```
 
 ## References
-1. Thanks to [MindYourDecisions](https://mindyourdecisions.com/blog/2018/04/09/can-you-make-24-from-3-3-8-8-its-surprisingly-hard/) for this particular problem.
+1. [MindYourDecisions](https://mindyourdecisions.com/blog/2018/04/09/can-you-make-24-from-3-3-8-8-its-surprisingly-hard/) for the (3,3,8,8) => 24 problem.
